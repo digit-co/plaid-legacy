@@ -7,6 +7,8 @@ var request = require('request');
 
 var Plaid = module.exports = {};
 
+var DEFAULT_REQUEST_TIMEOUT = 2 * 60 * 1000; // 2 minutes
+
 Plaid.environments = {
   production: 'https://api.plaid.com',
   tartan: 'https://tartan.plaid.com',
@@ -131,6 +133,7 @@ Plaid._publicRequest = function(options, callback) {
     uri: options.uri,
     method: options.method,
     json: true,
+    timeout: DEFAULT_REQUEST_TIMEOUT,
   };
 
   if (options.body != null) {
@@ -160,6 +163,7 @@ Plaid.Client.prototype._authenticatedRequest = function(options, callback) {
       client_id: this.client_id,
       secret: this.secret,
     }, options.body),
+    timeout: DEFAULT_REQUEST_TIMEOUT,
   }, function(err, res, body) {
     handleApiResponse(err, res, body, options.includeMfaResponse, callback);
   });
